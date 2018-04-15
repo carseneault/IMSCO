@@ -1,0 +1,38 @@
+---
+title: "IMSCO"
+author: "Chad Arseneault"
+date: "4/15/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###Load packages
+```{r}
+library(tidyverse)
+library(lubridate)
+library(rebus)
+```
+
+###Loading data
+```{r}
+d <- read_csv("IMSCO 3 YEAR HISTORY.csv.xls")
+```
+
+#####Converting column names to R naming conventions
+```{r}
+colnames(d) <- colnames(d) %>% 
+  tolower() %>% 
+  str_replace_all(" ", "_")
+
+colnames(d)
+```
+
+#####Setting correct column classes
+```{r}
+d$product_number <- as.factor(d$product_number)
+d$order_date <- mdy(d$order_date)
+
+summary(d)
