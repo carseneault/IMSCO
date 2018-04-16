@@ -82,8 +82,3 @@ d_products <- d_monthly %>%
 ```{r}
 head(d_products)
 ```
-
-```{r}
-head(d_products)
-```
-
