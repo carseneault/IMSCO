@@ -13,6 +13,7 @@ library(tidyverse)
 library(reshape2)
 library(lubridate)
 library(rebus)
+library(Matrix)
 ```
 
 ###Loading data
@@ -69,9 +70,7 @@ head(d_m_standard)
 #####Creating wide data set on dates
 ```{r}
 d_dates <- d_monthly %>% 
-  gather(variable, value, -(month:product_number)) %>%
-  unite(temp, product_number, variable) %>%
-  dcast(month ~ temp, fun=sum)
+  spread(product_number, quantity_billed, fill = 0)
 ```
 
 ```{r}
@@ -81,9 +80,7 @@ head(d_dates)
 #####Standardized
 ```{r}
 d_d_standard <- d_m_standard %>% 
-  gather(variable, value, -(month:product_number)) %>%
-  unite(temp, product_number, variable) %>%
-  dcast(month ~ temp, fun=sum)
+  spread(product_number, quantity_billed, fill = 0)
 ```
 
 ```{r}
@@ -94,9 +91,7 @@ head(d_d_standard)
 #####Creating wide dataset on products
 ```{r}
 d_products <- d_monthly %>% 
-  gather(variable, value, -(product_number:month)) %>%
-  unite(temp, month, variable) %>%
-  dcast(product_number ~ temp, fun=sum)
+  spread(month, quantity_billed, fill = 0)
 ```
 
 ```{r}
@@ -105,9 +100,7 @@ head(d_products)
 
 ```{r}
 d_p_standard <- d_m_standard %>% 
-  gather(variable, value, -(product_number:month)) %>%
-  unite(temp, month, variable) %>%
-  dcast(product_number ~ temp, fun=sum)
+  spread(month, quantity_billed, fill = 0)
 ```
 
 ```{r}
