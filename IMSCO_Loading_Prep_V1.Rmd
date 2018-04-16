@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ###Load packages
 ```{r}
 library(tidyverse)
+library(reshape2)
 library(lubridate)
 library(rebus)
 ```
@@ -19,6 +20,17 @@ library(rebus)
 ###Loading data
 ```{r}
 d <- read_csv("IMSCO 3 YEAR HISTORY.csv.xls")
+```
+
+###Exploratory Data Analysis
+#####Head of Data
+```{r}
+head(d)
+```
+
+#####Summary
+```{r}
+summary(d)
 ```
 
 #####Converting column names to R naming conventions
@@ -36,3 +48,37 @@ d$product_number <- as.factor(d$product_number)
 d$order_date <- mdy(d$order_date)
 
 summary(d)
+```
+
+#####Aggregating data by month
+```{r}
+d_monthly <- select(d, c(order_date, product_number, quantity_billed)) %>% 
+  group_by(month = floor_date(order_date, "month"), product_number = product_number) %>% 
+  summarize(quantity_billed = sum(quantity_billed))
+
+head(d_monthly)
+```
+
+#####Creating wide data set on dates
+```{r}
+d_dates <- d_monthly %>% 
+  gather(variable, value, -(month:product_number)) %>%
+  unite(temp, product_number, variable) %>%
+  dcast(month ~ temp, fun=sum)
+```
+
+```{r}
+head(d_dates)
+```
+
+#####Creating wide dataset on products
+```{r}
+d_products <- d_monthly %>% 
+  gather(variable, value, -(product_number:month)) %>%
+  unite(temp, month, variable) %>%
+  dcast(product_number ~ temp, fun=sum)
+```
+
+```{r}
+head(d_products)
+```
