@@ -1,7 +1,5 @@
 ---
 title: "IMSCO"
-author: "Chad Arseneault"
-date: "4/15/2018"
 output: html_document
 ---
 
@@ -59,6 +57,15 @@ d_monthly <- select(d, c(order_date, product_number, quantity_billed)) %>%
 head(d_monthly)
 ```
 
+#####Standardized
+```{r}
+d_m_standard <- d_monthly %>% 
+  mutate(quantity_billed = scale(quantity_billed))
+
+head(d_m_standard)
+```
+
+
 #####Creating wide data set on dates
 ```{r}
 d_dates <- d_monthly %>% 
@@ -71,6 +78,19 @@ d_dates <- d_monthly %>%
 head(d_dates)
 ```
 
+#####Standardized
+```{r}
+d_d_standard <- d_m_standard %>% 
+  gather(variable, value, -(month:product_number)) %>%
+  unite(temp, product_number, variable) %>%
+  dcast(month ~ temp, fun=sum)
+```
+
+```{r}
+head(d_d_standard)
+```
+
+
 #####Creating wide dataset on products
 ```{r}
 d_products <- d_monthly %>% 
@@ -82,3 +102,15 @@ d_products <- d_monthly %>%
 ```{r}
 head(d_products)
 ```
+
+```{r}
+d_p_standard <- d_m_standard %>% 
+  gather(variable, value, -(product_number:month)) %>%
+  unite(temp, month, variable) %>%
+  dcast(product_number ~ temp, fun=sum)
+```
+
+```{r}
+head(d_p_standard)
+```
+
