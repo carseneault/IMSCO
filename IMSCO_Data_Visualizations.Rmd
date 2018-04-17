@@ -1,0 +1,44 @@
+---
+title: "IMSCO_Data_Visualizations"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#####Load Packages
+```{r}
+library(tidyverse)
+library(reshape2)
+library(lubridate)
+library(rebus)
+```
+
+###Total Demand by Month
+#####Histogram
+```{r}
+d_dates %>% 
+  ggplot(aes(x = total)) +
+  geom_histogram(aes(y = ..density..), binwidth = 7500, col = "black", fill = "white") +
+  geom_density(alpha = .8, fill = "#0000FF")
+
+d_d_standard %>% 
+  ggplot(aes(x = total)) +
+  geom_histogram(aes(y = ..density..), binwidth = .3, col = "black", fill = "white") +
+  geom_density(alpha = .8, fill = "#FF6666")
+```
+
+#####Time Series
+```{r}
+d_dates %>% 
+  ggplot(aes(x = month, y = total)) +
+  geom_smooth(method = "loess") +
+  geom_point(col = "blue")
+
+d_d_standard %>% 
+  ggplot(aes(x = month, y = total)) +
+  geom_smooth(method = "loess", col = "red") +
+  geom_point(col = "red")
+```
+
