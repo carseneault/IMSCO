@@ -72,6 +72,13 @@ d_dates <- d_monthly %>%
   spread(product_number, quantity_billed, fill = 0)
 ```
 
+#####Adding total column
+```{r}
+d_dates$total <- rowSums(d_dates[, 2:ncol(d_dates)])
+
+d_dates$total
+```
+
 ```{r}
 head(d_dates)
 ```
@@ -80,6 +87,13 @@ head(d_dates)
 ```{r}
 d_d_standard <- d_m_standard %>% 
   spread(product_number, quantity_billed, fill = 0)
+```
+
+#####Adding total column
+```{r}
+d_d_standard$total <- scale(d_dates$total)
+
+d_d_standard$total
 ```
 
 ```{r}
