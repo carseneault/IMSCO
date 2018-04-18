@@ -119,3 +119,14 @@ d_p_standard <- d_m_standard %>%
 ```{r}
 head(d_p_standard)
 ```
+
+####Creating a wide dataset on order number and products
+```{r}
+d %>% select(-order_date, -customer_name) %>%
+  gather(key = variable, value, -c(order_number,product_number)) %>%
+  unite(temp, product_number, variable) %>%
+  dcast(order_number ~ temp, fun=sum) -> d_spread_order_number
+
+head(d_spread_order_number)
+```
+
